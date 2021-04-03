@@ -1,0 +1,289 @@
+!***************************************************************************!
+!                                                                           !
+! This is an input file for the pseudopotential band structure calculation
+! of a bulk zincblende semiconductor.
+! It is based on the Matlab script of
+!   [Pearsall] T. P. Pearsall, Quantum Photonics (2017), Chapter 4.
+! and reproduces his results.
+!
+! nextnano3, https://www.nextnano.com/nextnano3                             !
+! (c) nextnano GmbH, www.nextnano.com                                       !
+!                                                                           !
+!***************************************************************************!
+
+!++++++++++++++++++++++++++++++++
+! ==> Choose your material here:
+!++++++++++++++++++++++++++++++++
+!%AlAs       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %AlAs       = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%AlSb       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %AlSb       = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%GaP        = .TRUE.                  ! (DoNotShowInUserInterface)
+ %GaP        = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%GaAs       = .TRUE.                  ! Choose material (HighlightInUserInterface)
+ %GaAs       = .FALSE.                 ! Choose material
+
+!%GaSb       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %GaSb       = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%InP        = .TRUE.                  ! (DoNotShowInUserInterface)
+ %InP        = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%InAs       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %InAs       = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%InSb       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %InSb       = .FALSE.                 ! (DoNotShowInUserInterface)
+
+ %Si         = .TRUE.                  ! Choose material
+!%Si         = .FALSE.                 ! Choose material
+
+!%Ge         = .TRUE.                  ! (DoNotShowInUserInterface)
+ %Ge         = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%Sn         = .TRUE.                  ! (DoNotShowInUserInterface)
+ %Sn         = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%ZnS        = .TRUE.                  ! (DoNotShowInUserInterface)
+ %ZnS        = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%ZnSe       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %ZnSe       = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%ZnTe       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %ZnTe       = .FALSE.                 ! (DoNotShowInUserInterface)
+
+!%CdTe       = .TRUE.                  ! (DoNotShowInUserInterface)
+ %CdTe       = .FALSE.                 ! (DoNotShowInUserInterface)
+!++++++++++++++++++++++++++++++++
+
+!-----------------------------------------------------
+! include reciprocal G_i vectors up to this subscript
+!-----------------------------------------------------
+ %G_vectors_max_length_squared = 11                                         ! include reciprocal G_i vectors up to this subscript (ListOfValues:0,3,4,8,11)(HighlightInUserInterface)
+
+!%Number_of_Bands              = 10                                         ! number of bands to plot in band structure plot (1 <= num <= 51) (ListOfValues:10,51)
+ %Number_of_Bands              = 15                                         ! number of bands to plot in band structure plot (1 <= num <= 51) (ListOfValues:10,51)
+!%Number_of_Bands              = 51                                         ! number of bands to plot in band structure plot (1 <= num <= 51) (ListOfValues:10,51)
+
+!%ScalingFactor                = 0.0                                        ! 0.0 = no potential, i.e. free electron, 1.0 = full periodic potential, anything in between is a mixture (ListOfValus:0.0,1.0)(RangeOfValues:From=0.0,To=1.0,Step=0.1)(HighlightInUserInterface)
+ %ScalingFactor                = 1.0                                        ! 0.0 = no potential, i.e. free electron, 1.0 = full periodic potential, anything in between is a mixture (ListOfValus:0.0,1.0)(RangeOfValues:From=0.0,To=1.0,Step=0.1)(HighlightInUserInterface)
+
+ %Number_of_k_Points           = 400                                        ! number of k points to be calculated (DoNotShowInUserInterface)
+
+ %BandStructure           = user-defined-path ! path through Brillouin zone (ListOfValues:band,user-defined-path,L-Gamma-X-W-K-L-W-X-K-Gamma,L-Gamma-X-W-L-K-Gamma,L-Gamma-X-U-K-Gamma,L-Gamma-X-K-Gamma,L-Gamma-X)
+
+ %DebugLevel              = 0 ! debug level (DoNotShowInUserInterface)
+
+!--------------------------------------------------------------------!
+$tighten                                                             !
+ calculate-tight-binding-tighten  = no                               ! 
+ destination-directory            = BandStructure/                   ! name of output directory
+!------------------------------------------------------------------------------------------
+! Note: For the bulk tight-binding code, 'band' and 'L-Gamma-X-W-L-K-Gamma' are identical.
+!------------------------------------------------------------------------------------------
+ k-vectors-sample-type            = %BandStructure
+!k-vectors-sample-type            = user-defined-path
+!k-vectors-sample-type            = L-Gamma-X-W-K-L-W-X-K-Gamma      ! [JancuPRB1998] See Fig. 1 of A. Sawamura et al., Optical Materials Express 8, 1569 (2018)
+!k-vectors-sample-type            = L-Gamma-X-W-L-K-Gamma
+!k-vectors-sample-type            = L-Gamma-X-U-K-Gamma
+!k-vectors-sample-type            = L-Gamma-X-K-Gamma
+!k-vectors-sample-type            = L-Gamma-X)
+
+ Brillouin-zone-path              = 0.5   0.5  0.5   ! L         [2pi/a]
+                                    0.0   0.0  0.0   ! Gamma     [2pi/a]
+                                    1.0   0.0   0.0  ! X         [2pi/a]
+                                    1.0   0.25  0.0  ! W         [2pi/a]
+                                    0.75  0.75  0.0  ! K         [2pi/a]
+                                    0.5   0.5   0.5  ! L         [2pi/a]
+                                    1.0   0.25  0.0  ! W         [2pi/a]
+                                    1.0   0.0   0.0  ! X         [2pi/a]
+                                    0.75  0.75  0.0  ! K         [2pi/a]
+                                    0.0   0.0   0.0  ! Gamma     [2pi/a]
+
+ k-direction-to-k-point            = 0.0  0.0   0.0  ! Gamma     [2pi/a]
+
+!---------------------------
+! Pseudopotential algorithm
+!---------------------------
+ number-of-k-points               = %Number_of_k_Points
+ pseudopotential-scaling-factor   = %ScalingFactor
+
+!IF %Si   pseudopotential-form-factors     = 0.0  -2.856  0.0    0.544  1.088 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %Si                                      0.0   0.0    0.0    0.0    0.0   ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %Ge   pseudopotential-form-factors     = 0.0  -3.128  0.0    0.136  0.816 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %Ge                                      0.0   0.0    0.0    0.0    0.0   ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %Sn   pseudopotential-form-factors     = 0.0  -2.720  0.0    0.0    0.544 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %Sn                                      0.0   0.0    0.0    0.0    0.0   ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+
+!IF %AlP  pseudopotential-form-factors     = 0.0   0.0    0.0    0.0    0.0   ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)
+!IF %AlP                                     0.0   0.0    0.0    0.0    0.0   ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric)
+
+! AlAs values are from Aaron J. Danner, https://www.ece.nus.edu.sg/stfpage/eleadj/pseudopotential.htm
+! Values might have different units. Not sure if they are consistent to our code.
+!IF %AlAs pseudopotential-form-factors     = 0.0  -0.221  0.0    0.025  0.07  ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)
+!IF %AlAs                                    0.0   0.08   0.05   0.0   -0.004 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric)
+
+!IF %AlSb pseudopotential-form-factors     = 0.0  -2.856  0.0    0.272  0.816 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %AlSb                                    0.0   0.816  0.544  0.0    0.272 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+
+!IF %GaP  pseudopotential-form-factors     = 0.0  -2.992  0.0    0.408  0.952 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %GaP                                     0.0   1.632  0.952  0.0    0.272 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %GaAs pseudopotential-form-factors     = 0.0  -3.128  0.0    0.136  0.816 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %GaAs                                    0.0   0.952  0.680  0.0    0.136 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %GaSb pseudopotential-form-factors     = 0.0  -2.992  0.0    0.0    0.680 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %GaSb                                    0.0   0.816  0.680  0.0    0.136 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+
+!IF %InP  pseudopotential-form-factors     = 0.0  -3.128  0.0    0.136  0.816 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %InP                                     0.0   0.952  0.680  0.0    0.136 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %InAs pseudopotential-form-factors     = 0.0  -2.992  0.0    0.0    0.680 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %InAs                                    0.0   1.088  0.680  0.0    0.408 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %InSb pseudopotential-form-factors     = 0.0  -2.720  0.0    0.0    0.544 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %InSb                                    0.0   0.816  0.680  0.0    0.136 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+
+!IF %ZnS  pseudopotential-form-factors     = 0.0  -2.992  0.0    0.408  0.952 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %ZnS                                     0.0   3.264  1.904  0.0    0.544 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %ZnSe pseudopotential-form-factors     = 0.0  -3.128  0.0    0.136  0.816 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %ZnSe                                    0.0   2.448  1.632  0.0    0.408 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %ZnTe pseudopotential-form-factors     = 0.0  -2.992  0.0    0.0    0.680 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %ZnTe                                    0.0   1.768  1.360  0.0    0.136 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+!IF %CdTe pseudopotential-form-factors     = 0.0  -2.720  0.0    0.0    0.544 ! U_0, U_3, U_4=0, U_8  , U_11 (symmetric)     [Pearsall]
+!IF %CdTe                                    0.0   2.040  1.224  0.0    0.544 ! U_0, U_3, U_4  , U_8=0, U_11 (antisymmetric) [Pearsall]
+
+ G-vectors-included               = %G_vectors_max_length_squared
+ number-of-bands-to-plot          = %Number_of_Bands
+!number-of-band-for-Fermi-energy  = 1            ! [Pearsall]        ! set reference energy for Gamma point, i.e. E_v,max = 0 eV (4th band == E_v,max)
+!number-of-band-for-Fermi-energy  = 5                                ! set reference energy for Gamma point, i.e. E_c,min = 0 eV (5th band == E_c,min)
+!number-of-band-for-Fermi-energy  = 4                                ! set reference energy for Gamma point, i.e. E_v,max = 0 eV (4th band == E_v,max)
+$end_tighten                                                         !
+!--------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$material                                                                   !
+                                                                            !
+ material-number = 1                                                        !
+
+!IF %AlP   material-name   = AlP
+!IF %AlAs  material-name   = AlAs
+!IF %AlSb  material-name   = AlSb
+
+!IF %GaP   material-name   = GaP
+!IF %GaAs  material-name   = GaAs
+!IF %GaSb  material-name   = GaSb
+
+!IF %InP   material-name   = InP
+!IF %InAs  material-name   = InAs
+!IF %InSb  material-name   = InSb
+
+!IF %Si    material-name   = Si
+!IF %Ge    material-name   = Ge
+!IF %Sn    material-name   = Sn
+
+!IF %ZnS   material-name   = ZnS
+!IF %ZnSe  material-name   = ZnSe
+!IF %ZnTe  material-name   = ZnTe
+!IF %CdTe  material-name   = CdTe
+
+ cluster-numbers = 1                                                        !
+                                                                            !
+$end_material                                                               !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$global-settings                                                            !
+ output-directory           = /
+ debug-level                = %DebugLevel
+$end_global-settings                                                        !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$global-parameters                                                          !
+ lattice-temperature = 300.0d0                                              ! Kelvin
+!lattice-temperature =   1.0d0                                              ! Kelvin
+$end_global-parameters                                                      !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! NOTE: The following is IRRELEVANT for the pseudopotential calculations.
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$numeric-control                                                            !
+ simulation-dimension             = 1                                       !
+ zero-potential                   = yes                                     ! do not solve Poisson equation
+$end_numeric-control                                                        !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$simulation-dimension                                                       !
+ dimension   = 1                                                            !
+ orientation = 0 0 1                                                        !
+$end_simulation-dimension                                                   !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! Flow control is the possibility to control the actual computation.        !
+!---------------------------------------------------------------------------!
+$simulation-flow-control                                                    !
+ flow-scheme        = 70                                                    !  70 = pseudopotential band structure
+ strain-calculation = no-strain                                             !
+$end_simulation-flow-control                                                !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$domain-coordinates                                                         !
+ domain-type            = 0 0 1                                             !
+ z-coordinates          = 0.0 10.0                                          !
+ pseudomorphic-on       = GaAs                                              ! irrelevant if no strain
+$end_domain-coordinates                                                     !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$regions                                                                    !
+                                                                            !
+ region-number = 1    base-geometry = line   region-priority = 1            !
+ z-coordinates = 0d0   10.0                                                 !
+                                                                            !
+$end_regions                                                                !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$grid-specification                                                         !
+ grid-type      = 0 0 1                                                     ! simulation along z direction
+                                                                            !
+ z-grid-lines   = 0.0 10.0
+ z-nodes        =    9    
+ z-grid-factors =    1.0
+                                                                            !
+$end_grid-specification                                                     !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$region-cluster                                                             !
+ cluster-number = 1 region-numbers = 1 2  ! 2 = default region              !
+$end_region-cluster                                                         !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$output-material                                                            !
+ destination-directory        = material_parameters/
+ lattice-constants            = lattice-constants.dat
+$end_output-material                                                        !
+!---------------------------------------------------------------------------!
+
