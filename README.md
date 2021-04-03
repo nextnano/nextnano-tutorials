@@ -6,3 +6,5 @@ In this repository, nextnano users can upload their input files and results, e.g
 I hope this repository will be useful for many PhD students!
 
 Stefan Birner
+Managing Director
+nextnano GmbH
