@@ -1,0 +1,174 @@
+#***************************************************************************!
+#                                                                           !
+# Input file for HgTe/CdTe quantum well                                     !
+#                                                                           !
+# for                                                                       !
+# 
+# Fig. 3.10 in
+# 
+# Modeling of semiconductor nanostructures and semiconductor–electrolyte interfaces
+# S. Birner
+# Selected Topics of Semiconductor Physics and Technology (G. Abstreiter, M.-C. Amann, M. Stutzmann, and P. Vogl, eds.), Vol. 135,
+# Verein zur Förderung des Walter Schottky Instituts der Technischen Universität München e.V., München, 239 pp. (2011)
+# ISBN 978-3-941650-35-0
+# PhD thesis
+#                                                                           !
+# ------------------------------------------------------------------------  !
+# ==> Recommendation:                                                       !
+#     Sweep the quantum well width %QW_WIDTH using nextnanomat's Template   !
+#     feature in order to reproduce Fig. 3.10                               !
+# ------------------------------------------------------------------------- !
+#                                                                           !
+# For help on the individual keywords please go to                          !
+# https://www.nextnano.com/nextnanoplus                                     !
+#                                                                           !
+# (c) Stefan Birner, nextnano GmbH                                          !
+#                                                                           !
+# BSD license                                                               !
+#                                                                           !
+# Documentation: https://www.nextnano.com/nextnanoplus                      !
+# Support:       support@nextnano.com                                       !
+#***************************************************************************!
+
+#Begin of parameters region
+
+
+ $GRID_SPACING             = 0.2    # (DisplayUnit:nm)(ListOfValues:0.1, 0.2, 0.3) grid spacing
+ $WELL_WIDTH               = 7.8    # (DisplayUnit:nm)(HighlightInUserInterface)(RangeOfValues:From=6.0,To=8.0,Step=0.2) width of quantum well
+ $BARRIER_WIDTH            = 10.0   # (DisplayUnit:nm) width of barriers
+ $NUM_EL                   = 30     # Number of electron eigenfunctions to be calculated
+ $NUM_HL                   = 14     # Number of hole eigenfunctions to be calculated
+
+global{ 
+   simulate1D{}
+   
+   crystal_zb{
+      x_hkl = [1, 0, 0]
+      y_hkl = [0, 1, 0]
+   }
+
+   substrate{
+      name = "CdTe"
+   }
+
+   temperature = 4.2E0 # Kelvin
+   # WARNING: Varshni parameters are always used in nextnano++
+
+}
+
+grid{
+   xgrid{
+      line{ pos = - $BARRIER_WIDTH                 spacing = $GRID_SPACING }
+      line{ pos =   $WELL_WIDTH + $BARRIER_WIDTH   spacing = $GRID_SPACING }
+   }
+}
+
+database{   # redefine some default material parameters for matching nextnano3 results
+
+   #### cadmium telluride ############################################################
+   binary_zb{
+      name = CdTe
+      valence_bands{
+         bandoffset = -0.873333333
+      }
+   }
+
+   #### mercury telluride ############################################################
+   binary_zb{
+      name = HgTe
+      valence_bands{
+         bandoffset = -0.36
+      }
+      kp_6_bands{
+         L = 54.9462
+         M = -4.1
+         N = 54.2462
+         kappa = -10.741
+      }
+   }
+
+}
+
+structure{
+   output_region_index{ boxes = no }
+   output_material_index{ boxes = no }
+   output_alloy_composition{ boxes = no }
+
+   region{
+      everywhere{
+      }
+      contact { name = dummy }
+      binary{
+         name = "CdTe"
+      }
+   }
+   region{
+      line{ # HgTe QW
+         x = [0, $WELL_WIDTH]
+      }
+      binary{
+         name = "HgTe"
+      }
+   }
+}
+
+impurities{
+}
+
+contacts{
+   fermi{ name = "dummy" bias = 0}
+}
+
+classical{
+   Gamma{}
+   HH{}
+   LH{}
+   SO{}
+   output_bandedges{ averaged = no }
+}
+
+poisson{
+   output_potential{}
+   output_electric_field{}
+}
+
+currents{
+   recombination_model{
+      SRH         = no
+      Auger       = no
+      radiative   = no
+   }
+}
+
+quantum {
+   region{
+      name = "quantum_region"
+      x = [ - $BARRIER_WIDTH + 1, $WELL_WIDTH + $BARRIER_WIDTH - 1]
+      no_density = yes
+      boundary{
+         x = dirichlet # Neumann or (Dirichlet|dirichlet|DIRICHLET). Nonsens input means Neumann (default)
+      }
+
+      kp_8band{
+         num_electrons = $NUM_EL 
+         num_holes = $NUM_HL
+         lapack{}
+       # arpack_inv{}
+	   # linear_solver{
+	   #   iterations = 5000
+	   # }
+         spurious_handling = [0,1,-1,1,0,0] # the last flag in array switches of the spurious handling
+      }
+
+      output_wavefunctions{
+         max_num = 100
+         all_k_points = yes
+         amplitudes = no
+         probabilities = yes
+      }
+   }
+}
+
+run{
+   quantum{}
+}

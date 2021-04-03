@@ -1,0 +1,707 @@
+#***************************************************************************!
+#                                                                           !
+# Input file for HgTe/CdTe quantum well                                     !
+#                                                                           !
+# for                                                                       !
+# 
+# Fig. 3.8 in
+# 
+# Modeling of semiconductor nanostructures and semiconductor–electrolyte interfaces
+# S. Birner
+# Selected Topics of Semiconductor Physics and Technology (G. Abstreiter, M.-C. Amann, M. Stutzmann, and P. Vogl, eds.), Vol. 135,
+# Verein zur Förderung des Walter Schottky Instituts der Technischen Universität München e.V., München, 239 pp. (2011)
+# ISBN 978-3-941650-35-0
+# PhD thesis
+#                                                                           !
+# ------------------------------------------------------------------------  !
+# ==> Recommendation:                                                       !
+#     Sweep the flow-scheme %FlowScheme using nextnanomat's Template        !
+#     feature in order to reproduce Fig. 3.8 and Fig. 3.9.                  !
+#     Use %FlowScheme =   3 to calculate the k.p eigenstates.           (Fig. 3.8) !
+#     Use %FlowScheme = 200 to calculate the tight-binding eigenstates. (Fig. 3.9) !
+# ------------------------------------------------------------------------- !
+#                                                                           !
+# For help on the individual keywords please go to                          !
+# https://www.nextnano.com/nextnano3/input_parser/keywords/keywords.htm     !
+#                                                                           !
+# (c) Stefan Birner, nextnano GmbH                                          !
+#                                                                           !
+# BSD license                                                               !
+#                                                                           !
+# Documentation: https://www.nextnano.com/nextnano3                         !
+# Support:       support@nextnano.com                                       !
+#***************************************************************************!
+
+#Begin of parameters region
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# a) k.p calculation
+# b) tight-binding calculation
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ %FlowScheme     = 3    ! a) calculate k.p dispersion (ListOfValues:3,200)(HighlightInUserInterface)
+!%FlowScheme     = 200  ! b) rashba2tighten (tight-binding) + tighten (ListOfValues:3,200)(HighlightInUserInterface)
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+!%InputDirectory_for_TightBindingFiles = "../Syntax/Tight-binding files/"
+ %InputDirectory_for_TightBindingFiles = "C:\Users\stefan.birner.NEXTNANO\Documents\temp\HgTe CdTe Quantum Well\"
+
+ %FBEFA = yes                  ! broken-gap = yes               (DoNotShowInUserInterface)
+!%FBEFA = no                   ! broken-gap = no                (DoNotShowInUserInterface)
+!%FBEFA = full-band-density    ! broken-gap = full-band-density (DoNotShowInUserInterface)
+
+!%ClassicalCalculation = yes   ! classical calculation          (DoNotShowInUserInterface)
+ %ClassicalCalculation = no    ! quantum-mechanical calculation (DoNotShowInUserInterface)
+!%QM_Electrons         = effective-mass
+ %QM_Electrons         = 8x8kp ! (DoNotShowInUserInterface)
+
+ %NUM_EL                = 40 !80
+
+ %num_k_parallel_vectors = 0        ! only k_parallel = 0
+!%num_k_parallel_vectors = 500
+!%num_k_parallel_vectors = 3000
+
+ %TB_num_k_parallel_vectors = 500
+!%TB_num_k_parallel_vectors = 1  
+
+!%kp_dispersion = 01-00                            ! [kx,ky]: from [01] to [00] where kx = 0
+ %kp_dispersion = 01-00-11                         ! [kx,ky]: from [01] to [00] where kx = 0 and
+
+ %DebugLevel = 0 ! debug level (DoNotShowInUserInterface)
+!%DebugLevel = 5 ! debug level (DoNotShowInUserInterface)
+
+!%BoundaryCondition = periodic  !  (DoNotShowInUserInterface)
+ %BoundaryCondition = Dirichlet !  (DoNotShowInUserInterface)
+
+ %Cation1 = Cd ! cation #1
+ %Cation2 = Hg ! cation #2
+ %Anion1  = Te ! anion #1
+ %Anion2  = Te ! anion #2
+
+ %FunctionParser = yes ! (DoNotShowInUserInterface)
+
+!%BandShift = -0.570 ! Novik            (DisplayUnit:eV) (HighlightInUserInterface)
+ %BandShift = -0.400 ! (Schindler test) (DisplayUnit:eV) (HighlightInUserInterface)
+
+!lattice-constant HgTe = 0.64611 nm
+!lattice-constant CdTe = 0.64810 nm
+! 16 monolayers HgTe QW =  8 * 0.64611 = 5.16888 nm ~= 5.2 nm
+! 24 monolayers HgTe QW = 12 * 0.64611 = 7.75332 nm ~= 7.8 nm
+! 26 monolayers HgTe QW = 13 * 0.64611 = 8.42530 nm ~= 8.4 nm
+
+#--------------------------
+# Sweep quantum well width
+#--------------------------
+!%QW_WIDTH = 5.2           ! ==> Sweep quantum well width (range of values)! quantum well width = 5.2 nm (DisplayUnit:nm) (RangeOfValues:From=2,To=10,Step=0.5) (ListOfValues:2.0,3.0,4.0,5.0,6.0,6.5,7.0,7.5,8.0,9.0,10.0) (HighlightInUserInterface)
+!%QW_WIDTH = 6.5           ! ==> Sweep quantum well width (range of values)! quantum well width = 7.8 nm (DisplayUnit:nm) (RangeOfValues:From=2,To=10,Step=0.5) (ListOfValues:2.0,3.0,4.0,5.0,6.0,6.5,7.0,7.5,8.0,9.0,10.0) (HighlightInUserInterface)
+ %QW_WIDTH = 7.8           ! ==> Sweep quantum well width (range of values)! quantum well width = 7.8 nm (DisplayUnit:nm) (RangeOfValues:From=2,To=10,Step=0.5) (ListOfValues:2.0,3.0,4.0,5.0,6.0,6.5,7.0,7.5,8.0,9.0,10.0) (HighlightInUserInterface)
+
+ %shift_z_coordinate = 26/2 * 0.64611/2 ! Shift structure by this amount so that k.p and tight-binding results align. The tight-binding simulation always starts at 0 nm. (DisplayUnit:nm)
+
+ %Barrier_WIDTH = 10 ! width of barrier (DisplayUnit:nm)
+ %DEVICE_WIDTH = %QW_WIDTH + 2 * %Barrier_WIDTH ! (DisplayUnit:nm)(DoNotShowInUserInterface)
+
+ %z_min = -%Barrier_WIDTH + %shift_z_coordinate       ! minimum z extension of structure (DisplayUnit:nm)(DoNotShowInUserInterface)
+ %z_max = %z_min + %DEVICE_WIDTH ! maximum z extension of structure (DisplayUnit:nm)(DoNotShowInUserInterface)
+
+ %QW_min = %shift_z_coordinate                   ! minimum z coordinate of quantum well (DisplayUnit:nm)(DoNotShowInUserInterface)
+ %QW_max = %QW_min + %QW_WIDTH ! maximum z coordinate of quantum well (DisplayUnit:nm)(DoNotShowInUserInterface)
+
+ %QuantumRegion_SMALLER = 1 ! quantum region is 1 nm smaller than device (DisplayUnit:nm)
+ %QR_MIN = %z_min + %QuantumRegion_SMALLER  ! (DisplayUnit:nm)(DoNotShowInUserInterface)
+ %QR_MAX = %z_max - %QuantumRegion_SMALLER  ! (DisplayUnit:nm)(DoNotShowInUserInterface)
+
+!%grid_spacing   = 0.25                                      ! 0.25 nm gridding (DisplayUnit:nm)
+ %grid_spacing   = 0.20                                      ! 0.20 nm gridding (DisplayUnit:nm)
+ %nodes          = ( %QW_WIDTH )      / %grid_spacing - 1    ! number of nodes (DoNotShowInUserInterface)
+ %BarrierNodes   = ( %Barrier_WIDTH ) / %grid_spacing - 1    ! number of nodes (DoNotShowInUserInterface)
+ !----------------------------------------------------------------------------
+ ! If you need an integer, then call the variable '%INT(<name>)'.
+ !----------------------------------------------------------------------------
+ %INT(nodes)        = %nodes                                   ! number of nodes (integer) <== it is necessary to convert it to an integer (DoNotShowInUserInterface)
+ %INT(BarrierNodes) = %BarrierNodes                            ! number of nodes (integer) <== it is necessary to convert it to an integer (DoNotShowInUserInterface)
+
+!%OutputMaterial = %QW_min - 1 ! Output material parameters of at this coordinate (HgTe). (DisplayUnit:nm)
+ %OutputMaterial = %QW_min + 1 ! Output material parameters of at this coordinate (HgTe). (DisplayUnit:nm)
+
+!!%FULLBAND = 0     ! use fullband density (0/1)
+!End of parameters region
+
+!----------------------------------------------------------------------------
+$numeric-control
+ simulation-dimension               = 1
+ varshni-parameters-on              = no
+
+ zero-potential                     = yes
+
+ poisson-boundary-condition-along-z = periodic                               ! periodic boundary conditions for Poisson equation
+
+! schroedinger-masses-anisotropic = box
+! schroedinger-1band-ev-solv      = laband
+
+!discretize-only-once           = no                                        ! necessary for lapack .AND. finite-differences-1D
+ discretize-only-once           = yes                                       ! necessary for lapack .AND. finite-differences-1D
+!kp-cv-term-symmetrization      = yes                                       !
+!kp-vv-term-symmetrization      = yes                                       !
+ kp-cv-term-symmetrization      = no                                        !
+ kp-vv-term-symmetrization      = no                                        !
+schroedinger-kp-discretization = box-integration                           ! 
+!schroedinger-kp-discretization = finite-differences                        ! 
+! schroedinger-kp-discretization = finite-differences-1D                     !
+!discretize-only-once           = no
+ schroedinger-kp-ev-solv        = LAPACK-ZHBGV
+!schroedinger-kp-ev-solv        = chearn                                    !
+!schroedinger-kp-ev-solv        = arpack                                    !
+ schroedinger-kp-residual       = 1.0d-12                                   !
+ schroedinger-kp-iterations     = 1200                                      !
+
+ broken-gap = %FBEFA                                                       ! 'yes' / 'no' / 'full-band-density'
+
+!----------------------------------------------------------------------------
+! With options
+!   Luttinger-parameters           = no                                        
+!   8x8kp-params-from-6x6kp-params = LMN
+!   8x8kp-params-rescale-S-to      = no
+! we use '6x6kp-parameters = L   M   N' and
+!        '8x8kp-parameters = B   E_P S'
+!----------------------------------------------------------------------------
+
+ Luttinger-parameters           = no                                        ! use LMN parameters
+!Luttinger-parameters           = 6x6kp-kappa                               !
+!Luttinger-parameters           = yes                                       ! use Luttinger instead of LMN parameters
+!Luttinger-parameters           = yes-kappa     ! [Lawaetz]                 ! use Luttinger instead of LMN parameters
+
+!8x8kp-params-from-6x6kp-params = yes   !  ! [Lawaetz]         don't use Novik's S parameter     ! 1D/2D/3D (L',M'=M,N',S)
+ 8x8kp-params-from-6x6kp-params = LMN   ! <<== should be used        use Novik's S parameter     ! 1D/2D/3D (L',M'=M,N')
+!8x8kp-params-from-6x6kp-params = no    !                      use 8x8 k.p parameters
+
+ 8x8kp-params-rescale-S-to      = no    ! <<== should be used ! [Novik]
+!8x8kp-params-rescale-S-to      = ONE   !  ! [Lawaetz]
+!8x8kp-params-rescale-S-to      = ZERO
+
+ separation-energy-shift-eV     = -0.450                                    ! energy above which eigenvalues should be calculated
+
+$end_numeric-control
+!----------------------------------------------------------------------------
+
+!-------------------------------------------------------------------!
+$tighten                                                            !
+ calculate-tight-binding-tighten  = yes                             !
+ tighten-method                   = rashba2tighten-tighten
+ tight-binding-model              = Sarma                           ! 'Scholz' for III-V, 'Sarma' for II-VI materials
+ destination-directory            = TightBinding/
+!input-directory                  = "../Syntax/Tight-binding files/"
+ input-directory                  = %InputDirectory_for_TightBindingFiles
+!filename-material-parameters     = TB_material_parameters.in
+!filename-distance-parameters     = TB_distance_parameters.in
+ filename-material-parameters     = TB_material_parameters_no_strain_HgTeCdTe.in
+ filename-distance-parameters     = TB_distance_parameters_no_strain_HgTeCdTe.in
+ filename-tighten                 = tighten.in
+ filename-k-vectors               = k_vectors.dat                   ! ==> will be read in by tighten program
+!k-vectors-sample-type            = band                            ! 'band'
+!k-vectors-sample-type            = xyz                             ! 'band'
+ k-vectors-sample-type            = two                             ! 'band'
+ number-of-k-points               = %TB_num_k_parallel_vectors 
+ k-direction-to-k-point           = 0.06   0.0   0.0                ! [2pi/a] |k-vector| in dim less units 2sq(2)pi/a_lat, 2pi/a_vert
+ power-of-distance-dependence     = 2.0                             !
+ calculate-eigenvectors           = yes                             !
+ scale                            = 6.0                             ! Scale |psi|^2. (default: 1.0)
+ debug-level                      = 1                               ! '1', '2', '3'
+
+!-----------------
+! Now tighten....
+!-----------------
+!filename-states                  = states.in
+ calculate-only-lattice-geometry  = no                              ! 'yes' / 'no'
+ output-Hamiltonian               = no                              ! 'yes' / 'lower' / 'no'
+ calculate-k-derivatives          = no                              ! 'yes' / 'first' / 'second' / 'no'
+!tighten-option                   = eigenvalues-only                ! 'eigenvalues-only', 'eigenvectors-and-density', 'eigenvectors-and-g-factor', 'no-eigenvalues'
+ tighten-option                   = eigenvectors-and-density        ! 'eigenvalues-only', 'eigenvectors-and-density', 'eigenvectors-and-g-factor', 'no-eigenvalues'
+!number-of-band-for-psi           = 1                               ! used with 2 above, index of 1st bands for |psi|^2
+ number-of-band-for-psi           = -5                              ! used with 2 above, index of 1st bands for |psi|^2
+ number-of-bands-to-plot          = 8                               ! (default: 4)
+$end_tighten                                                        !
+!-------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$atomic-layers
+
+!--------------------------------------
+! layer 1: cation  (odd)
+! layer 2: anion   (even)
+!--------------------------------------
+
+ layer-number =  1    ion-1-name = %Cation1          ion-1-content = 1.0    ion-2-name = Hg   ion-2-content = 0.0    ! Cd cation / alloy content
+ layer-number =  2    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number =  3    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number =  4    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number =  5    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number =  6    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number =  7    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number =  8    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number =  9    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 10    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 11    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 12    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 13    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 14    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 15    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 16    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 17    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 18    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 19    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 20    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 21    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 22    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 23    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 24    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 25    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 26    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+
+ layer-number = 27    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 28    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 29    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 30    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 31    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 32    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 33    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 34    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 35    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 36    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 37    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 38    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 39    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 40    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 41    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 42    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 43    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 44    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 45    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 46    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 47    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 48    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 49    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 50    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 51    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 52    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 53    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 54    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 55    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 56    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 57    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 58    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 59    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 60    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 61    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 62    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 63    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 64    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 65    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 66    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 67    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 68    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 69    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 70    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 71    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 72    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 73    ion-1-name = %Cation2          ion-1-content = 1.0                                             ! Hg cation / alloy content
+ layer-number = 74    ion-1-name = %Anion2           ion-1-content = 1.0                                             ! Te anion  / alloy content
+
+ layer-number = 75    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 76    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 77    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 78    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 79    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 80    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 81    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 82    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 83    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 84    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 85    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 86    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 87    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 88    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 89    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 90    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 91    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 92    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 93    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 94    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 95    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 96    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 97    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 98    ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+ layer-number = 99    ion-1-name = %Cation1          ion-1-content = 1.0                                             ! Cd cation / alloy content
+ layer-number = 100   ion-1-name = %Anion1           ion-1-content = 1.0                                             ! Te anion  / alloy content
+
+$end_atomic-layers
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$global-settings                                                            !
+ output-directory           = output/
+ debug-level                = %DebugLevel
+$end_global-settings                                                        !
+!---------------------------------------------------------------------------!
+
+
+!---------------------------------------------------------------------------!
+! NOTE: The following stuff is IRRELEVANT for the tight-binding calculations.
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! orientation specifies the axes which are simulated                        !
+! e.g. in 1D, 0 0 1 means along z axis                                      !
+!---------------------------------------------------------------------------!
+$simulation-dimension                                                       !
+ dimension   = 1                                                            !
+ orientation = 0 0 1                                                        !
+$end_simulation-dimension                                                   !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$global-parameters                                                          !
+ lattice-temperature = 4.2                                                  ! Kelvin
+$end_global-parameters                                                      !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! Flow control is the possibility to control the actual computation.        !
+!---------------------------------------------------------------------------!
+$simulation-flow-control                                                    !
+ flow-scheme         = %FlowScheme                                          !
+ strain-calculation  = no-strain                                            !
+!strain-calculation  = homogeneous-strain                                   !
+$end_simulation-flow-control                                                !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$domain-coordinates                                                         !
+ domain-type            = 0 0 1                                             !
+ z-coordinates          = %z_min %z_max
+ growth-coordinate-axis = 0 0 1                                             !
+!pseudomorphic-on       = HgTe                                           
+ pseudomorphic-on       = MySubstrate  ! HgTe
+ crystal-type           = zincblende
+ lattice-constants      = 0.64611  0.64611  0.64611                         ! [nm] HgTe            ??? K: 0.64611  (HgTe)  0.64611=bulk HgTe, 0.647503=Hg0.30Cd0.70Te, 0.64810=bulk CdTe
+!lattice-constants      = 0.647503 0.647503 0.647503                        ! [nm] Hg0.30Cd0.70Te  ??? K: 0.64611  (HgTe)  0.64611=bulk HgTe, 0.647503=Hg0.30Cd0.70Te, 0.64810=bulk CdTe
+!lattice-constants      = 0.64810  0.64810  0.64810                         ! [nm] CdTe            ??? K: 0.64611  (HgTe)  0.64611=bulk HgTe, 0.647503=Hg0.30Cd0.70Te, 0.64810=bulk CdTe
+$end_domain-coordinates                                                     !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$regions                                                                    !
+ region-number = 1    base-geometry = line   region-priority = 1            ! HgTe QW
+ z-coordinates = %QW_min %QW_max
+$end_regions                                                                !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$grid-specification                                                         !
+ grid-type        =    0 0 1                                                !
+ z-grid-lines     =    %z_min %QW_min %QW_max %z_max
+ z-nodes          =         %INT(BarrierNodes)  %INT(nodes)  %INT(BarrierNodes)                              ! 0.20 nm gridding
+ z-grid-factors   =         1.0                 1.0          1.0
+$end_grid-specification                                                     !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$region-cluster                                                             !
+ cluster-number = 1    region-numbers = 1                                   ! HgTe QW
+ cluster-number = 2    region-numbers = 2                                   ! (default) HgCdTe
+$end_region-cluster                                                         !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$material                                                                   !
+ 
+ material-number = 1                                                        !
+ material-name   = HgTe
+!material-name   = CdTe
+ cluster-numbers = 1                                                        !
+ 
+ material-number = 2                                                        !
+!material-name   = HgTe
+!material-name   = Hg(1-x)Cd(x)Te
+ material-name   = CdTe
+ cluster-numbers = 2                                                        !
+!alloy-function  = constant
+ 
+$end_material                                                               !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$alloy-function                                                             !
+
+ material-number        = 2                                                 !
+ function-name          = constant
+ xalloy                 = 0.7                                               ! Hg0.3Cd0.7Te
+
+$end_alloy-function                                                         !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! valence band offset
+! VBO(HgTe/CdTe) = 1.18 - 0.86 = 0.32 eV
+! VBO(HgTe/CdTe) = 1.18 - 0.86 + bandshift = 0.570 eV [Novik] ==> band-shift (CdTe) = -0.250 eV
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! Here we are overwriting the database entries for HgTe.                    !
+! E_gap = -0.122 eV (Gamma, semimetal, T = 300 K) J. Reno et al., APL 49, 106 (1986)
+! E_gap = -0.261 eV (Gamma, semimetal, T =  77 K)
+! E_gap = -0.302 eV (Gamma, semimetal, T =   4 K) J. Reno et al., APL 49, 106 (1986)
+! E_gap = -0.303 eV (Gamma, semimetal, T =   0 K) [Novik] ! E_gap = 1.237 - 1.18 - 1/3 * 1.08 = -0.303 eV (negative gap!)
+! [Novik] Novik et al., PRB 72, 035321 (2005)
+!---------------------------------------------------------------------------!
+$binary-zb-default                                                          !
+ binary-type                         = HgTe-zb-default                      !
+!apply-to-material-numbers           = 1 2                                  !
+ apply-to-material-numbers           = 1                                    !
+
+ conduction-band-masses              = -0.03096 -0.03096 -0.03096 ! [m0] Gamma cb1 - 1st principal axis, 2nd, 3rd [Novik] 
+!conduction-band-masses              = -0.031   -0.031   -0.031   ! [m0] Gamma cb1 - 1st principal axis, 2nd, 3rd [LawaetzPRB1971] 
+                                        0.2     0.2     0.2     !!! [m0] L      ???        cb2 - 1st principal axis, 2nd, 3rd - m_l m_t m_t
+                                        0.5     0.5     0.5     !!! [m0] X      ???        cb3 - 1st principal axis, 2nd, 3rd - m_l m_t m_t
+ conduction-band-energies            =-0.303  4.0      4.0         !! [Novik] = E_gap  0K (Gamma), L(?), X(?)
+!conduction-band-energies            = 1.237  4.870  3.800         !! [Novik]     0K (Gamma), L(?), X(?)
+!conduction-band-energies            = 1.228  4.870  3.800         !! [DEFAULT]   0K (Gamma), L(?), X(?)
+!conduction-band-energies            = 1.269  4.870  3.800         !!  77K (Gamma), L(?), X(?)
+!conduction-band-energies            = 1.408  4.870  3.800         !! 300K (Gamma), L(?), X(?)
+                                                                      !
+!valence-band-energies               = 1.18                         ! A. Zunger, average valence band energy E_v,av [eV]
+ valence-band-energies               = -0.36 ! -Delta_so/3          !            average valence band energy E_v,av [eV]
+ band-shift                          = 0.0                            ! to adjust band alignments (should be zero in database): adds to all band energies
+!band-shift                          = -1.237                       ! [eV] shift so that E_c = 0 eV
+ absolute-deformation-potential-vb   = -3.45                        ! a_v [eV] A. Zunger
+ absolute-deformation-potentials-cbs = -6.64  -4.19  -1.48          ! A. Zunger - absolute deformation potentials of conduction band minima (Gamma, L, X)
+!uniax-vb-deformation-potentials     = -1.21  -2.5                  ! b (Qteish)      , d (?) [eV]
+ uniax-vb-deformation-potentials     = -1.15  -2.5                  ! b (van de Walle), d (?) [eV]
+                                                                      !
+ lattice-constants                   = 0.64611 0.64611  0.64611 ! [nm] ? K (HgTe Schindler)
+
+!Luttinger-parameters'               =  4.1     0.5      1.3      ! [Novik]   gamma1', gamma2', gamma3' (8x8 k.p parameters!)
+ Luttinger-parameters                = -16.5821 -9.84103 -9.04103 ! [Novik]   gamma1, gamma2, gamma3
+!Luttinger-parameters                = -15.5   -8.9     -8.9      ! gamma1, gamma2, gamma3 (  4 K) -  J. Reno et al., APL 49, 106 (1986): gamma2 = gamma3
+!Luttinger-parameters                = -44.8   -23.55   -23.55    !           gamma1, gamma2, gamma3 (300 K) -  J. Reno et al., APL 49, 106 (1986): gamma2 = gamma3
+!Luttinger-parameters                = -18.68  -10.19   -9.56     ! gamma1, gamma2, gamma3 [LawaetzPRB1971]
+                                       -10.741  0.06              ! kappa (6x6kp) [Novik], q [LawaetzPRB1971]
+!                                      -0.4     0.06              ! kappa' (8x8kp!) [Novik], q [LawaetzPRB1971]
+!6x6kp-parameters                    = 50.1    -3.3     53.4      ! L,M,N (4 K)  [hbar^2/2m] (--> divide by hbar^2/2m)
+ 6x6kp-parameters                    = 54.9462 -4.10000 54.2462   ! [Novik]   L,M,N [hbar^2/2m] (--> divide by hbar^2/2m)
+!                                      1.05                         ! delta_(split-off) in [eV] [Qteish/Needs]
+                                       1.08                         ! delta_(split-off) in [eV] [Novik]
+ ! Eg=-0.302 eV (4 K)                                                 !
+! S = 1 + 2 F; F = (S-1)/2
+ 8x8kp-parameters                    =-7.10000 -4.10000 -7.80000! 8x8 k.p parameters  L',M,N' [hbar^2/2m] (--> divide by hbar^2/2m)
+!                                      0.0     18.0    -0.898 !!! B?, E_P [LawaetzPRB1971], S?, B [hbar^2/2m], E_P [eV], S [], Ref. E_P: J. Reno et al., APL 49, 106 (1986)
+                                       0.0     18.8     1.0       ! B?, E_P [Novik], S [Novik] , B [hbar^2/2m], E_P [eV], S []
+$end_binary-zb-default                                                      !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! Here we are overwriting the database entries for CdTe.                    !
+!
+! E_gap = 1.528 eV (300 K)
+! E_gap = 1.606 eV (4.2 K)
+! E_gap = 1.43  eV (Gamma, direct semiconductor, T = 300 K) J. Piprek
+! E_gap = 1.606 eV (Gamma, direct semiconductor, T =   0 K) J. Piprek [Novik]
+! E_gap = 1.425 eV (Gamma, direct semiconductor, T = 300 K) J. Reno et al., APL 49, 106 (1986)
+! E_gap = 1.550 eV (Gamma, direct semiconductor, T =  77 K)
+! E_gap = 1.600 eV (Gamma, direct semiconductor, T =   4 K) J. Reno et al., APL 49, 106 (1986)
+! E_gap = 1.54  eV (Gamma, direct semiconductor, T = ?   K) D.L. Rode, PRB 2, 4036 (1970)
+! E_gap = 3.04  eV (L                          , T = ?   K) calculated from Gamma-L valley separation energy (R. Brazis)
+!
+! mass density = 6.06 g/cm^3,        V. Borsari, C. Jacoboni, phys. stat. sol. (b) 54, 649 (1972)
+! acoustic deformation potential: 9.5 eV - D.L. Rode, PRB 2, 4036 (1970)
+! longitudinal sound velocity: 3.39 km/s - J.M. Rowe et al., PRB 10, 671 (1974)
+! transverse   sound velocity: 1.7  km/s - J.M. Rowe et al., PRB 10, 671 (1974)
+!
+! electron g factor: between 4 K and 240 K it holds: g = -1.653 + 4 x 10-4 T + 2.8 x 10-6 T^2. [M. Oestreich et al., PRB 53, 7911 (1996)]
+
+! E_gap = 1.606 eV (Gamma, T =   0 K) [Novik] ! E_gap = 2.769333333333 - 0.86 - 1/3 * 0.91 = 1.606 eV
+!
+! [Novik] Novik et al., PRB 72, 035321 (2005)
+!---------------------------------------------------------------------------!
+$binary-zb-default                                                          !
+ binary-type                         = CdTe-zb-default                      !
+!apply-to-material-numbers           = 1 2                                  !
+ apply-to-material-numbers           = 2                                    !
+
+!conduction-band-masses              = 0.0963  0.0963  0.0963   ! [DEFAULT] Gamma  cb1 - 1st principal axis, 2nd, 3rd -               V. Borsari, C. Jacoboni, phys. stat. sol. (b) 54, 649 (1972)
+ conduction-band-masses              = 0.08997 0.08997 0.08997  ! [Novik]   Gamma  cb1 - 1st principal axis, 2nd, 3rd -               V. Borsari, C. Jacoboni, phys. stat. sol. (b) 54, 649 (1972)
+!conduction-band-masses              = 0.096   0.096   0.096    ! [LawaetzPRB1971]  Gamma  cb1 - 1st principal axis, 2nd, 3rd -               V. Borsari, C. Jacoboni, phys. stat. sol. (b) 54, 649 (1972)
+                                       0.5     0.5     0.5      ! L      cb2 - 1st principal axis, 2nd, 3rd - m_l m_t m_t - V. Borsari, C. Jacoboni, phys. stat. sol. (b) 54, 649 (1972)
+                                       0.5     0.5     0.5    !!! X  ??? cb3 - 1st principal axis, 2nd, 3rd - m_l m_t m_t
+                                                                      ! nonparabolicity coefficient: 0.54 1/eV  V. Borsari, C. Jacoboni, phys. stat. sol. (b) 54, 649 (1972)
+ conduction-band-energies            = 1.606           3.04   5.0  ! [Novik] = E_gap  0K (Gamma), L, X(?)
+!conduction-band-energies            = 2.769333333333  4.21   5.0  ! [Novik]   0K (Gamma), L, X(?)
+!conduction-band-energies            = 2.776  4.21   5          ! [DEFAULT] 0K (Gamma), L, X(?)
+!conduction-band-energies            = 2.720  4.21   5          !  77K (Gamma), L, X(?)
+!conduction-band-energies            = 2.600  4.21   5          ! 300K (Gamma), L, X(?)
+                                                                      !
+!valence-band-masses                 = 0.76   0.76   0.76       ! hh J. Piprek, p. 7
+ valence-band-masses                 = 0.72   0.72   0.72       ! hh J. Piprek, p. 21
+                                       0.13   0.13   0.13       ! lh J. Piprek, p. 21
+                                       0.3    0.3    0.3      !!! split-off hole -->Cardona et al. PRB 38_1806
+!valence-band-energies               = 0.86                         ! A. Zunger, average valence band energy E_v,av [eV]
+ valence-band-energies               = -0.303333333333333333333333333 ! -Delta_so/3    !    average valence band energy E_v,av [eV]
+ static-dielectric-constants         = 10.6   10.6   10.6       !                  V. Borsari, C. Jacoboni, phys. stat. sol. (b) 54, 649 (1972)
+!band-shift                          = 0.0                            ! [DEFAULT] to adjust band alignments (should be zero in database): adds to all band energies
+ band-shift                          = %BandShift
+!band-shift                          = -0.570                       ! [Novik]   to adjust band alignments (should be zero in database): adds to all band energies
+!band-shift                          = -0.400                       ! [Schindler] to adjust band alignments (should be zero in database): adds to all band energies
+!band-shift                          = -0.250                       ! [Novik]   to adjust band alignments (should be zero in database): adds to all band energies
+                                                                      ! VBO(HgTe/CdTe) = 1.18 - 0.86 + bandshift = 0.570 eV [Novik] ==> band-shift (CdTe) = -0.250 eV
+!band-shift                          = -1.237 + -0.250 =          ! [eV] shift so that E_c (HgTe) = 0 eV
+!band-shift                          = -1.487                       ! [eV] shift so that E_c (HgTe) = 0 eV
+!band-shift                          = -1.487 + 0.056671428 =       ! [eV] shift so that VBO (HgTe)/CdTe = 570 meV
+!band-shift                          = -1.430328571                 ! [eV] shift so that VBO (HgTe)/CdTe = 570 meV
+ absolute-deformation-potential-vb   = -2.14                        ! a_v [eV] A. Zunger
+!absolute-deformation-potential-vb   = 0.55                         ! J. Piprek a_v [eV]
+!absolute-deformation-potentials-cbs = -3.96  -4.02  -0.70      ! Gamma (J. Piprek), L(Zunger), X(Zunger) absolute deformation potentials of conduction band minima (Gamma, L, X)
+ absolute-deformation-potentials-cbs = -5.84  -4.02  -0.70      ! A. Zunger - absolute deformation potentials of conduction band minima (Gamma, L, X)
+!uniax-vb-deformation-potentials     = -1.2   -2.8                ! b (J. Piprek)   , d (experiment) [eV]
+!uniax-vb-deformation-potentials     = -1.25  -2.5                ! b (Qteish)      , d (theory)     [eV]
+ uniax-vb-deformation-potentials     = -1.1   -2.8                ! b (van de Walle), d (experiment) [eV]
+                                                                      !
+ lattice-constants                   = 0.6486  0.6486  0.6486   ! [nm] 300 K - J. Piprek
+!lattice-constants                   = 0.6480  0.6480  0.6480   ! [nm]
+ lattice-constants-temp-coeff        = 3.11e-6   3.11e-6   3.11e-6    ! [nm/K]       J. Piprek - [see also R.D. Greenough et al., J. Phys. D: Appl. Phys. 6, 587 (1973) for a discussion of the temperature dependence)
+!elastic-constants                   = 53.3    36.5    20.44    ! [GPa] c11, c12, c44 - J. Piprek (exp. from Y.K. Vekilov and A.P. Rusakov, Sov. Phys.-Solid St. 13, 956 (1971) at 300 K)
+ elastic-constants                   = 53.8    37.4    20.18    ! [GPa] c11, c12, c44 - R.D. Greenough et al., J. Phys. D: Appl. Phys. 6, 587 (1973) at 298 K
+                                                                      !
+!Luttinger-parameters'               =  1.47   -0.28     0.03   ! gamma1', gamma2', gamma3' (8x8 k.p parameters) [Novik]
+! Luttinger-parameters                =   5.3    1.7      2.0    ! gamma1, gamma2, gamma3 - J. Piprek
+!Luttinger-parameters                =   5.29    1.89    2.46   ! gamma1, gamma2, gamma3 [LawaetzPRB1971]
+ Luttinger-parameters                = 5.37203 1.67102 1.98102  ! gamma1, gamma2, gamma3 [Novik]
+                                         0.64    0.05             ! kappa (6x6kp) [Novik], q [LawaetzPRB1971]
+!                                       -1.31    0.05             ! kappa (8x8kp!) [Novik], q [LawaetzPRB1971]
+!                                        1.27    0.05             ! kappa, q [LawaetzPRB1971]
+!6x6kp-parameters                    = -13.1   -2.9    -12.0    ! J. Piprek  L,M,N   [hbar^2/2m] (--> divide by hbar^2/2m)
+ 6x6kp-parameters                    = -13.0561 -3.03 -11.8861  ! [Novik]              L,M,N   [hbar^2/2m] (--> divide by hbar^2/2m)
+!                                      0.93                         ! delta_(split-off) in [eV] J. Piprek
+                                       0.91                         ! delta_(split-off) in [eV] [Novik]
+ ! Eg=1.43                                                            !
+! S = 1 + 2 F; F = (S-1)/2
+ 8x8kp-parameters                    = -1.35  -3.03     -0.18  !!! [DEFAULT] 8x8 k.p parameters  L',M,N' [hbar^2/2m] (--> divide by hbar^2/2m)
+!                                      0.0     18.0    -0.898 !!! B?, E_P, S?, B [hbar^2/2m], E_P [eV], S [], Ref. E_P: J. Reno et al., APL 49, 106 (1986)
+                                       0.0     18.8     0.82  !!! [Novik]   B?, E_P, S, B [hbar^2/2m], E_P [eV], S []
+!                                      0.0     20.7  1.0       ! B?, E_P [LawaetzPRB1971], S?, B [hbar^2/2m], E_P [eV], S []
+$end_binary-zb-default                                                      !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$quantum-regions                                                            !
+ region-number                           = 1                                !
+ base-geometry                           = line                             !
+ region-priority                         = 1                                !
+ z-coordinates                           = %QR_MIN %QR_MAX                  ! boundary points are excluded (box-integration)
+$end_quantum-regions                                                        !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$quantum-cluster                                                            !
+ cluster-number                          = 1                                !
+ region-numbers                          = 1                                !
+ deactivate-cluster                      = %ClassicalCalculation            ! 'yes'/'no'
+$end_quantum-cluster                                                        !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$quantum-model-electrons                                                    !
+ model-number                            = 1                                !
+ model-name                              = %QM_Electrons                    ! 8x8kp or effective-mass
+!model-name                              = 8x8kp                            ! 8x8kp or effective-mass
+!model-name                              = effective-mass                   ! 8x8kp or effective-mass
+ cluster-numbers                         = 1                                ! cluster numbers to which this model applies
+ conduction-band-numbers                 = 1                                ! to select bands (minima) handled in Schroedinger equation
+ number-of-eigenvalues-per-band          = %NUM_EL                          ! how many eigenenergies have to be calculated in each band (minimum)
+!number-of-eigenvalues-per-band          = 104                              ! how many eigenenergies have to be calculated in each band (minimum)
+!number-of-eigenvalues-per-band          = 60                               ! how many eigenenergies have to be calculated in each band (minimum)
+ boundary-condition-001                  = %BoundaryCondition               ! 'Neumann', 'Dirichlet', 'periodic'
+!boundary-condition-001                  = Dirichlet                        ! 'Neumann', 'Dirichlet', 'periodic'
+!num-ks-001                              = 1                                ! for periodic boundary condition
+ k-range-determination-method            = k-max-input                      !
+ k-range                                 = 0.06                             ! [1/Angstrom] = 0.5 [nm^-1]
+!k-range                                 = 0.1                              ! [1/Angstrom] = 1.0 [nm^-1]
+ method-of-brillouin-zone-integration    = gen-dos                          !
+!method-of-brillouin-zone-integration    = simple-integration               !
+ num-kp-parallel                         = %num_k_parallel_vectors          !
+!num-kp-parallel                         = 0                                ! for k_parallel=0
+!num-kp-parallel                         = 529                              !  576 = 23 * 23 = [(2 * 11) + 1 ] * [(2 * 11) + 1 ] ==>  66 k_parallel points have to be calculated
+! num-kp-parallel                         = 1849                             ! 1849 = 43 * 43 = [(2 * 21) + 1 ] * [(2 * 21) + 1 ] ==> 231 k_parallel points have to be calculated
+ num-ks-001 = 1
+$end_quantum-model-electrons                                                !
+!---------------------------------------------------------------------------!
+                
+!****** OUTPUT *************************************************************!
+
+!---------------------------------------------------------------------------!
+! This is the output for the band structure and the potential.              !
+!---------------------------------------------------------------------------!
+$output-bandstructure                                                       !
+ destination-directory                   = band_structure/                      
+ conduction-band-numbers                 = 1 ! 2 3                          ! 1 = Gamma
+ valence-band-numbers                    = 1 2 3                            !
+ potential                               = yes                              !
+$end_output-bandstructure                                                   !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+! This is the output for the material parameters.                           !
+!---------------------------------------------------------------------------!
+$output-material                                                            !
+ destination-directory = material_parameters/
+!lattice-constants     = 1Dlattice_constants.dat
+ grid-position         = 5.0                                                ! CdTe QW
+$end_output-material                                                        !
+!---------------------------------------------------------------------------!
+
+!---------------------------------------------------------------------------!
+$output-kp-data                                                             !
+ destination-directory                   = kp/
+!scale                                   = 1.0                              ! (default: 1.0) Scale output of psi^2 and psi.
+
+ bulk-kp-dispersion                      = yes                              !
+ k-direction-to-k-point                  = 0.0 0.0 0.6                      ! [1/nm]
+ number-of-k-points                      = 50                               !
+!grid-position                           = -1.0                             ! [nm] CdTe
+!grid-position                           =  1.0                             ! [nm] HgTe
+ grid-position                           = %OutputMaterial                  ! [nm]
+!shift-holes-to-zero                     = yes                              !
+                                                                            !
+!k-par-dispersion                        = yes                              ! whole k_parallel space
+ k-par-dispersion                        = %kp_dispersion                   ! [kx,ky]: from [01] to [00] where kx = 0
+!k-par-dispersion                        = 01-00                            ! [kx,ky]: from [01] to [00] where kx = 0
+!k-par-dispersion                        = 01-00-11                         ! [kx,ky]: from [01] to [00] where kx = 0 and
+                                                                            !          from [00] to [11] where kx = ky
+ k-par-disp-ev-min                       = 1                                !
+ k-par-disp-ev-max                       = %NUM_EL                          !
+                                                                            !
+ cb-num-ev-min                           = 1                                !
+ cb-num-ev-max                           = 80                               !
+ cb-k-par-min                            = 1                                ! 1D/2D
+ cb-k-par-max                            = 1                                ! 1D/2D
+
+!vb-num-ev-min                           = 1                                !
+!vb-num-ev-max                           = 80                               !
+!vb-k-par-min                            = 1                                ! 1D/2D
+!vb-k-par-max                            = 1                                ! 1D/2D
+
+!-------------------
+! DOS
+!-------------------
+!DOS-density-of-states = no                                                ! 'yes' / 'no' flag to output the density of states (DOS) (default: 'no')
+ DOS-density-of-states = yes                                               ! 'yes' / 'no' flag to output the density of states (DOS) (default: 'no')
+                                                                           ! only implemented for 1D so far, i.e. E(kx,ky)
+ DOS-Emin-Emax         = -0.6    1.406                                     ! minimum and maximum energy for density of states (DOS) [eV]
+                                                                           ! used for DOS calculation
+ DOS-points            = 1000                                              ! number of points between DOS-Emin and DOS-Emax, including boundary points (default: 1001.
+                                                                           ! This number determines the grid resolution of the energy grid
+                                                                           ! used for the density of states (DOS).
+!-------------------
+
+$end_output-kp-data                                                         !
+!---------------------------------------------------------------------------!
+
+

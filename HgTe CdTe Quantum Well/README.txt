@@ -1,0 +1,20 @@
+# Input file for HgTe/CdTe quantum well                                     !
+#                                                                           !
+# for                                                                       !
+# 
+# Fig. 3.8, Fig. 3.9 and Fig. 3.10 in
+# 
+# Modeling of semiconductor nanostructures and semiconductor–electrolyte interfaces
+# S. Birner
+# Selected Topics of Semiconductor Physics and Technology (G. Abstreiter, M.-C. Amann, M. Stutzmann, and P. Vogl, eds.), Vol. 135,
+# Verein zur Förderung des Walter Schottky Instituts der Technischen Universität München e.V., München, 239 pp. (2011)
+# ISBN 978-3-941650-35-0
+# PhD thesis
+#                                                                           !
+
+The tight-binding parameters are the same as our default tight-binding database (TB_material_parameters_in).
+The distance parameters are different (TB_distance_parameters.in) because we do not include strain here.
+
+For simplicity, and to be consistent to the paper of [Novik], we do not include strain although strain is supported in our software.
+
+Eigenvalues and psi^2 match perfectly between nextnano3 and nextnano++.
