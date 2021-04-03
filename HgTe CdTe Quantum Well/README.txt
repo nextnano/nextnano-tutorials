@@ -1,7 +1,7 @@
-# Input file for HgTe/CdTe quantum well                                     !
-#                                                                           !
-# for                                                                       !
-# 
+# Input file for HgTe/CdTe quantum well
+#
+# for
+#
 # Fig. 3.8, Fig. 3.9 and Fig. 3.10 in
 # 
 # Modeling of semiconductor nanostructures and semiconductor–electrolyte interfaces
