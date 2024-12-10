@@ -1,0 +1,365 @@
+!TEXT 
+    ========================================================================================================================= 
+    Christmas HEMT 2024
+    ------------------------------------------------------------------------------------------------------------------------- 
+    This input file is provided to you by nextnano GmbH (https://www.nextnano.com). 
+    The last revision of this input file was done on 2024-12-10. 
+    ========================================================================================================================= 
+!ENDTEXT 
+
+#---------------------------------------------------
+# THE CHRISTMAS FACTOR
+#---------------------------------------------------
+
+$CHRISTMAS_FACTOR = 1      # control the size of geometry, sweep this variable in the python script
+
+#---------------------------------------------------
+# x offset
+#---------------------------------------------------
+
+$xmin = 0.0     # minimum coordinate of whole structure along x direction (DisplayUnit:nm) (DoNotShowInUserInterface)
+$xmax = 40.0    # maximum coordinate of whole structure along x direction(DisplayUnit:nm) (DoNotShowInUserInterface)
+
+#---------------------------------------------------
+# THE TREE
+#---------------------------------------------------
+
+$TREE = $CHRISTMAS_FACTOR
+
+$x_tree_center = ($xmin + $xmax) /3         # x-coordinate of the center of the tree
+$w_trunk_0 = 3 * $TREE                      # width of base trunk of tree [nm]
+$w_trunk = 2 * $TREE                        # width of trunk of tree [nm]
+$h_0 = 2 * $TREE                            # height from ground to 1st leaves of the tree [nm]
+$h_1 = 2.2 * $TREE                          # height from 1st leaves to 2nd leaves  of the tree [nm]
+$h_2 = 2.2 * $TREE                          # height from 2nd leaves to 3rd leaves of the tree [nm]
+$h_3 = 4 * $TREE                            # height from 3rd leaves to the top of the tree [nm]
+$w_1 = 4 * $TREE                            # width of 1st leaves layer [nm]                       
+$w_2 = 3 * $TREE                            # width of 2nd leaves layer [nm]
+$w_3 = 3 * $TREE                            # width of 3rd leaves layer [nm]
+  
+#---------------------------------------------------
+# THE SNOWMAN
+#---------------------------------------------------
+$SNOWMAN = $CHRISTMAS_FACTOR
+
+$x_snowman_center = ($xmin + $xmax)* 2/3    # x-coordinate of the center of the snowman
+$r_1 = 4 * $SNOWMAN                         # radius of 1st layer of the snowman [nm]
+$r_2 = 2 * $SNOWMAN                         # radius of 2nd layer of the snowman [nm]
+ 
+# nose
+$l_nose = 3 * $SNOWMAN                      # the length of the snowman's nose [nm]                       
+$h_nose = 0.6 * $r_2                        # the height of the snowman's nose [nm]                       
+
+# eye
+$eye_radius = 0.25 * $r_2                   # the radius of the snowman's eye [nm]                  
+
+# button
+$hexagon_radius = 0.75 * $r_1 / 4           # the radius of the snowman's hexagon button [nm]
+  
+
+#---------------------------------------------------
+# Structure parameters
+#---------------------------------------------------
+
+$AlloyContent           = 0.3               # alloy[Al] content,   (DisplayUnit:)
+$SchottkyBarrierHeight  = 1.4               # Schottky barrier height phi_B = E_c - E_F, used by [Jogai2003], see p. 1634, column 1  (DisplayUnit:V)
+# AlGaN layer
+$ThicknessAlGaN = 30.0      # thickness of AlGaN spacer (DisplayUnit:nm)
+
+# GaN QW
+$ThicknessGaNQW = 40        # thickness of GaN quantum well (DisplayUnit:nm)
+
+# y - coordinate of this simulation
+$ymin = - $ThicknessGaNQW           # minimum coordinate of whole structure along y direction, corresponding to the end of QW region in this file (DisplayUnit:nm) (DoNotShowInUserInterface)
+$ymax = 1.0 + $ThicknessAlGaN       # maximum coordinate of whole structure along y direction, corresponding to the top (gate) region in this file (DisplayUnit:nm) (DoNotShowInUserInterface)
+
+# interfaces
+$itf_well_buffer = $ymin            # position of the end of quantum well (interface between buffer and quantum well)
+$itf_AlGaN_well = 0                 # position of the interface between GaN QW and AlGaN layer
+$itf_gate_AlGaN = $ThicknessAlGaN   # position of the interface between AlGaN layer and gate
+
+#---------------------------------------------------
+# Grid spacings
+#---------------------------------------------------
+$Spacing_QR             = 0.05                          # grid spacing along y direction in quantum region (DisplayUnit:nm)(DoNotShowInUserInterface)
+$Spacing_mid            = 0.1                           # grid spacing along y direction of the middle size
+$Spacing_general        = 1.0                           # grid spacing along y direction elsewhere         (DisplayUnit:nm)(DoNotShowInUserInterface)
+$Spacing_edge           = 0.5                           # grid spacing along x direction in edge region 
+
+#---------------------------------------------------
+# Define coordinate of 2DEG quantum region.
+#---------------------------------------------------
+$QR_width_2DEG          = 40.0                                      # width of quantum region of 2DEG (DisplayUnit:nm)(DoNotShowInUserInterface)
+$QRtop_2DEG             = $itf_AlGaN_well + $QR_width_2DEG * 4/8    # minimum coordinate of quantum region of 2DEG (DisplayUnit:nm) (DoNotShowInUserInterface)
+$QRbottom_2DEG          = $itf_AlGaN_well - $QR_width_2DEG * 4/8    # maximum coordinate of quantum region of 2DEG (DisplayUnit:nm) (DoNotShowInUserInterface)
+
+#---------------------------------------------------------------------------!
+$Temperature            = 300           # temperature (DisplayUnit:K)
+#---------------------------------------------------------------------------!
+
+run{
+    strain{}
+    poisson{}
+    quantum_poisson{ residual = 1e5 }
+}
+
+global{ 
+    simulate2D{}
+    
+    crystal_wz{
+        x_hkl = [0, 1, 0]
+        y_hkl = [0, 0, 1]
+    }
+    
+    substrate{ name = "GaN" }
+
+    temperature = $Temperature
+
+    periodic{ 
+        x = yes
+        y = no
+    }
+}
+
+contacts{
+    fermi { 
+        name = "fermi_zero" 
+        bias = 0
+    }
+    schottky{
+        name = Air_Schottky
+        bias = 0
+        barrier = $SchottkyBarrierHeight
+    } 
+}
+
+structure{
+    output_region_index{ boxes = no }
+    output_material_index{ boxes = no }
+    output_alloy_composition{ boxes = no }
+    
+    region{
+        everywhere{}
+        binary{ name = "GaN" }
+        contact{ name = fermi_zero }
+    }
+    region{ #...........Boundary condition of the contact region ............................................
+        rectangle{ 
+            x = [$xmin, $xmax]
+            y = [$itf_gate_AlGaN, $ymax]
+        } 
+        binary{ name = "GaN" }
+        contact{ name = "Air_Schottky" }
+    }
+    region{ #...........AlGaN region..............................................................
+        rectangle{ 
+            x = [$xmin, $xmax]
+            y = [$itf_AlGaN_well, $itf_gate_AlGaN]		 
+        } 
+        ternary_constant{
+            name    = "Al(x)Ga(1-x)N"  # ternary material name for this region with constant alloy profile
+            alloy_x = $AlloyContent    # x content of the alloy (minimum value is 0.0, maximum value is 1.0)
+        }
+    }  
+    region{ #...........GaN region as QW..............................................
+        rectangle{
+            x = [$xmin, $xmax] 
+            y = [$itf_well_buffer, $itf_AlGaN_well]
+        }   
+        binary{ name = "GaN" }
+    } 
+    !IF($TREE) # THE TREE - THE TREE - THE TREE - THE TREE - THE TREE - THE TREE - THE TREE - THE TREE - THE TREE - THE TREE
+        region{ # base trunk region
+            rectangle{
+                x = [ $x_tree_center - 0.5 * $w_trunk_0, $x_tree_center + 0.5 * $w_trunk_0] 
+                y = [$itf_AlGaN_well, $itf_AlGaN_well + $h_0]
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # first tree canopy
+            trapezoid{
+                base_x = [$x_tree_center - 0.5 * $w_trunk - $w_1, $x_tree_center + 0.5 * $w_trunk + $w_1] 
+                base_y = [$itf_AlGaN_well + $h_0, $itf_AlGaN_well + $h_0]
+                top_x = [$x_tree_center - 0.5 * $w_trunk, $x_tree_center + 0.5 * $w_trunk] 
+                top_y = [$itf_AlGaN_well + $h_0 + $h_1, $itf_AlGaN_well + $h_0 + $h_1]
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # second tree canopy
+            trapezoid{
+                base_x = [$x_tree_center - 0.5 * $w_trunk - $w_2, $x_tree_center + 0.5 * $w_trunk + $w_2] 
+                base_y = [$itf_AlGaN_well + $h_0 + $h_1, $itf_AlGaN_well + $h_0 + $h_1]
+                top_x = [$x_tree_center - 0.5 * $w_trunk, $x_tree_center + 0.5 * $w_trunk] 
+                top_y = [$itf_AlGaN_well + $h_0 + $h_1 + $h_2, $itf_AlGaN_well + $h_0 + $h_1 + $h_2]
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # third(top) tree canopy
+            triangle{
+                vertex{x = $x_tree_center - 0.5 * $w_trunk - $w_3           y = $itf_AlGaN_well + $h_0 + $h_1 + $h_2}
+                vertex{x = $x_tree_center + 0.5 * $w_trunk + $w_3           y = $itf_AlGaN_well + $h_0 + $h_1 + $h_2}
+                vertex{x = $x_tree_center                                   y = $itf_AlGaN_well + $h_0 + $h_1 + $h_2 + $h_3}
+                
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # third(top) tree canopy
+            trapezoid{
+                base_x = [$x_tree_center - 0.5 * $w_trunk - $w_3, $x_tree_center + 0.5 * $w_trunk + $w_3] 
+                base_y = [$itf_AlGaN_well + $h_0 + $h_1 + $h_2, $itf_AlGaN_well + $h_0 + $h_1 + $h_2]
+                top_x = [$x_tree_center, $x_tree_center] 
+                top_y = [$itf_AlGaN_well + $h_0 + $h_1 + $h_2 + $h_3, $itf_AlGaN_well + $h_0 + $h_1 + $h_2 + $h_3]
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # cut tip by circle
+            circle{
+                center{x = $x_tree_center + $h_3        y = $itf_AlGaN_well + $h_0 + $h_1 + $h_2 + $h_3}
+                radius = $h_3
+            }   
+            ternary_constant{
+                name    = "Al(x)Ga(1-x)N"
+                alloy_x = $AlloyContent
+            }
+        }
+        region{ # cut tip by circle
+            circle{
+                center{x = $x_tree_center - $h_3        y = $itf_AlGaN_well + $h_0 + $h_1 + $h_2 + $h_3}
+                radius = $h_3
+            }   
+            ternary_constant{
+                name    = "Al(x)Ga(1-x)N"
+                alloy_x = $AlloyContent
+            }
+        }
+    !ENDIF
+    
+    !IF($SNOWMAN)# THE SNOWMAN - THE SNOWMAN - THE SNOWMAN - THE SNOWMAN - THE SNOWMAN - THE SNOWMAN - THE SNOWMAN - THE SNOWMAN
+        region{ # base circle
+            circle{
+                center{x = $x_snowman_center            y = $itf_AlGaN_well + 0.5 * $r_1}
+                radius = $r_1
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # 2nd circle
+            circle{
+                center{x = $x_snowman_center            y = $itf_AlGaN_well + 1.5 * $r_1 + 0.5 * $r_2}
+                radius = $r_2
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # nose
+            triangle{
+                vertex{x = $x_snowman_center                            y = $itf_AlGaN_well + 1.5 * $r_1 + 0.5 * $r_2 + $h_nose}
+                vertex{x = $x_snowman_center                            y = $itf_AlGaN_well + 1.5 * $r_1 + 0.5 * $r_2}
+                vertex{x = $x_snowman_center + $r_2 + $l_nose           y = $itf_AlGaN_well + 1.5 * $r_1 + 0.5 * $r_2}
+            }   
+            binary{ name = "GaN" }
+        }
+        region{ # 2nd circle
+            circle{
+                center{x = $x_snowman_center + 0.5 * $r_2               y = $itf_AlGaN_well + 1.5 * $r_1 + 0.5 * $r_2 + 0.5 * $r_2}
+                radius = $eye_radius
+            }   
+            ternary_constant{
+                name    = "Al(x)Ga(1-x)N"
+                alloy_x = $AlloyContent
+            }
+        }
+        region{ # 1st button
+            hexagon{
+                center{x = $x_snowman_center                            y = $itf_AlGaN_well + 0.5 * $r_1 }
+                corner{x = $x_snowman_center                            y = $itf_AlGaN_well + 0.5 * $r_1 + $hexagon_radius}
+            }   
+            ternary_constant{
+                name    = "Al(x)Ga(1-x)N"
+                alloy_x = $AlloyContent
+            }
+        }
+        region{ # 2nd button
+            hexagon{
+                center{x = $x_snowman_center                            y = $itf_AlGaN_well + $r_1 }
+                corner{x = $x_snowman_center                            y = $itf_AlGaN_well + $r_1 + $hexagon_radius}
+            }   
+            ternary_constant{
+                name    = "Al(x)Ga(1-x)N"
+                alloy_x = $AlloyContent
+            }
+        }
+    !ENDIF
+}
+
+grid{
+    xgrid{
+        line{ pos = $xmin                   spacing = $Spacing_edge } 
+        line{ pos = $xmax /8                spacing = $Spacing_QR }
+        line{ pos = $xmax *7/8              spacing = $Spacing_QR }
+        line{ pos = $xmax                   spacing = $Spacing_edge }
+    }
+    ygrid{
+        line{ pos =  $ymax                  spacing = $Spacing_general }
+        line{ pos =  $itf_gate_AlGaN/2      spacing = $Spacing_mid }
+        line{ pos =  $itf_gate_AlGaN/3      spacing = $Spacing_QR }
+        line{ pos =  $itf_AlGaN_well        spacing = $Spacing_QR }
+        line{ pos =  $itf_well_buffer/8     spacing = $Spacing_QR }
+        line{ pos =  $itf_well_buffer/4     spacing = $Spacing_mid }    
+        line{ pos =  $itf_well_buffer       spacing = $Spacing_general }
+    }
+}
+
+classical{
+    Gamma{}
+    HH{}
+    LH{}
+    SO{}
+    output_bandedges{ averaged = no }
+    output_carrier_densities{}
+    output_bandgap{}
+}
+
+strain{
+    growth_direction = [0, 0, -1]   # cation-faced structure # based on the Miller indices 
+    minimized_strain{}
+    
+    output_strain_tensor{ simulation_system = yes }
+    output_polarization_charge{}
+    output_polarization_charge_components{}
+    output_hydrostatic_strain{ }
+    
+    output_lattice_constants{}
+    output_elastic_constants{}
+    output_piezo_constants{}
+    output_pyro_constants{}
+}
+
+poisson{
+    charge_neutral{}
+    output_potential{}
+    output_electric_field{}
+}
+
+currents{
+    recombination_model{
+        SRH         = no
+        Auger       = no
+        radiative   = no
+    }
+}
+
+quantum{
+    region{ # 2DEG
+        name = "quantum_2DEG"
+        x = [$xmin, $xmax]
+        y = [$QRbottom_2DEG, $QRtop_2DEG]
+    
+        boundary{ y = dirichlet }
+    
+        Gamma{ num_ev = 50 }
+        output_wavefunctions{  
+            amplitudes = yes  
+            probabilities = no  
+            max_num = 30 
+        }
+    }
+}
